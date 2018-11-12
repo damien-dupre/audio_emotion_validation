@@ -1,0 +1,51 @@
+---
+title: "Accuracy of automatic emotion recognition from voice"
+author:
+  - name: Damien Dupré
+    email: damien.dupre@ucd.ie
+    affiliation: University College Dublin
+    footnote: Corresponding Author
+  - name: Gary McKeown
+    email: gmckeown@qub.ac.uk
+    affiliation: Queen's University Belfast
+address:
+  - code: University College Dublin
+    address: The Insight Centre for Data Analytics, Dublin, Republic of Ireland
+  - code: Queen's University Belfast
+    address: University Road, Belfast, United Kingdom
+
+abstract: |
+
+journal: "ISRE 2019"
+date: "`r Sys.Date()`"
+bibliography: mybibfile.bib
+output: rticles::elsevier_article
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(cache.extra = knitr::rand_seed, message = FALSE, warning = FALSE, error = FALSE, echo = FALSE, fig.align="center")
+library(papaja)
+library(here)
+# data wrangling
+library(plyr)
+library(data.table)
+library(tidyverse)
+# statistical modeling
+
+# result plots
+library(ggplot2)
+```
+
+
+```{r analysis_preferences}
+set.seed(123)# Seed for random number generation
+options(scipen = 999) #disable sci number format
+
+# load data
+
+```
+
+
+
+References {#references .unnumbered}
+==========
