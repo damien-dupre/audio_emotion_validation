@@ -6,8 +6,7 @@ library(digest)
 library(jsonlite)
 options(scipen = 999)
 
-privatekey <- "00e6a75f-026e-4c2c-81a4-28088f798bb9"
-userid <- "cavan@sensum.co"
+
 
 
 # hmac digest for auth
