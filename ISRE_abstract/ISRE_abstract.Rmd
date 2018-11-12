@@ -42,8 +42,13 @@ set.seed(123)# Seed for random number generation
 options(scipen = 999) #disable sci number format
 
 # load data
-
+raw_data <- data.table::fread(here::here("./data","audeering_gemep.csv")) 
 ```
+
+Voice is one of the main communication channel to express emotions. Because affective computing is aiming to create systems and algorithms to automatically analyse people's emotion, several companies such as Affectiva, Beyond Verbal and Audeering have already created and are using systems to automatically analyse vocal expression of emtions. However little is known about the accuracy of such systems.
+
+In order to evaluate the accuracy of these systems we have processed the vocal expressions of emotions displayed in the GEMEP database with the Audeering system "SensAI Emotion". The GEMEP database is made of audio-video recordings by 10 actors performing 17 different emotional scenarios in which they have to vocalise the same non-words with an emotional tonality. SensAI Emotion is an API service which is analysing emotions from speech and render a value for 23 affective states as well as for valence and arousal dimensions. 
+
 
 
 
