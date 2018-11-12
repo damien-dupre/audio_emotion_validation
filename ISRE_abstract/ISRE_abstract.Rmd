@@ -6,13 +6,13 @@ author:
     affiliation: University College Dublin
     footnote: Corresponding Author
   - name: Gary McKeown
-    email: gmckeown@qub.ac.uk
+    email: g.mckeown@qub.ac.uk
     affiliation: Queen's University Belfast
 address:
   - code: University College Dublin
-    address: The Insight Centre for Data Analytics, Dublin, Republic of Ireland
+    address: The Insight Centre for Data Analytics, University College Dublin, Republic of Ireland
   - code: Queen's University Belfast
-    address: University Road, Belfast, United Kingdom
+    address: School of Psychology, Queen's University Belfast, United Kingdom
 
 abstract: |
 
@@ -20,6 +20,8 @@ journal: "ISRE 2019"
 date: "`r Sys.Date()`"
 bibliography: mybibfile.bib
 output: rticles::elsevier_article
+citation_package: biblatex
+csl: apa.csl
 ---
 
 ```{r setup, include = FALSE}
@@ -45,12 +47,66 @@ options(scipen = 999) #disable sci number format
 raw_data <- data.table::fread(here::here("./data","audeering_gemep.csv")) 
 ```
 
-Voice is one of the main communication channel to express emotions. Because affective computing is aiming to create systems and algorithms to automatically analyse people's emotion, several companies such as Affectiva, Beyond Verbal and Audeering have already created and are using systems to automatically analyse vocal expression of emtions. However little is known about the accuracy of such systems.
+```{r category-accuracy}
+category_accuracy <- data.table::fread(here::here("./data","audeering_gemep.csv"))%>%
+  dplyr::filter(emotion %in% c("dis", "con","fea", "irr","anx", "int","joy", "pri","sad", "ang")) %>%
+  dplyr::mutate(emotion_c = case_when(
+    emotion == "dis" ~ "disgust",
+    emotion == "con" ~ "contentment",
+    emotion == "fea" ~ "fear",
+    emotion == "irr" ~ "irritation",
+    emotion == "anx" ~ "worry",
+    emotion == "int" ~ "interest",
+    emotion == "joy" ~ "joy",
+    emotion == "pri" ~ "pride",
+    emotion == "sad" ~ "sadness",
+    emotion == "ang" ~ "anger"
+  )) %>%
+  dplyr::mutate(match_emotion = ifelse(emotion_c == segments.emotion.category.name, 1, 0))
+```
 
-In order to evaluate the accuracy of these systems we have processed the vocal expressions of emotions displayed in the GEMEP database with the Audeering system "SensAI Emotion". The GEMEP database is made of audio-video recordings by 10 actors performing 17 different emotional scenarios in which they have to vocalise the same non-words with an emotional tonality. SensAI Emotion is an API service which is analysing emotions from speech and render a value for 23 affective states as well as for valence and arousal dimensions. 
+```{r dimension-accuracy}
+VA_accuracy <- data.table::fread(here::here("./data","audeering_gemep.csv")) %>%
+  dplyr::filter(emotion %in% c("joy", "amu","pri", "ang","fea", "des","ple", "rel","int", "irr","anx", "sad")) %>%
+  dplyr::select(name_audio, ppt, emotion,contains("emotion")) %>%
+  dplyr::mutate(emotion_valence = case_when(
+    emotion %in% c("joy","amu","pri","ple","rel","int") ~ "positive",
+    emotion %in% c("ang","fea","des","irr","anx","sad") ~ "negative"
+  )) %>%
+  dplyr::mutate(emotion_valence_c = case_when(
+    emotion %in% c("joy","amu","pri","ple","rel","int") ~ 1,
+    emotion %in% c("ang","fea","des","irr","anx","sad") ~ 0
+  )) %>%
+  dplyr::mutate(emotion_arousal = case_when(
+    emotion %in% c("joy", "amu","pri", "ang","fea", "des") ~ "high",
+    emotion %in% c("ple", "rel","int", "irr","anx", "sad") ~ "low"
+  )) %>%
+  dplyr::mutate(emotion_arousal_c = case_when(
+    emotion %in% c("joy", "amu","pri", "ang","fea", "des") ~ 1,
+    emotion %in% c("ple", "rel","int", "irr","anx", "sad") ~ 0
+  )) %>%
+  dplyr::group_by(name_audio,emotion, emotion_valence, emotion_arousal) %>%
+  dplyr::summarise_if(is.numeric,mean) %>%
+  dplyr::mutate(rec_arousal = ifelse(segments.emotion.dimensions.activation>0, 1,0)) %>%
+  dplyr::mutate(rec_valence = ifelse(segments.emotion.dimensions.valence>0, 1,0)) %>%
+  as.data.frame()
 
+VA_accuracy$emotion_valence_c <- as.factor(as.character(VA_accuracy$emotion_valence_c))
+VA_accuracy$emotion_arousal_c <- as.factor(as.character(VA_accuracy$emotion_arousal_c))
+VA_accuracy$rec_valence <- as.factor(as.character(VA_accuracy$rec_valence))
+VA_accuracy$rec_arousal <- as.factor(as.character(VA_accuracy$rec_arousal))
 
+valence_confusion_matrix <- caret::confusionMatrix(VA_accuracy$emotion_valence_c, VA_accuracy$rec_valence)
+arousal_confusion_matrix <- caret::confusionMatrix(VA_accuracy$emotion_arousal_c, VA_accuracy$rec_arousal)
+```
 
+Voice is one of the main communication channels to express emotions [@poria2017review]. Because Affective Computing is aiming to create systems and algorithms to automatically analyse people's emotion, several companies such as Affectiva, Beyond Verbal and Audeering have already develloped  automatic systems to analyse vocal expression of emotions. However little is known about the accuracy of such systems.
+
+In order to evaluate the accuracy of automatic emotion recognition from voice, we have processed vocal expressions from the GEMEP database with "SensAI Emotion" develloped by Audeering. The GEMEP database is made of audio-video recordings from 10 actors performing 17 different emotional scenarios in which they have to vocalize the same non-words with an emotional tonality [@banziger2010introducing]. SensAI Emotion analyses emotions from speech and render a value for 23 affective states as well as for valence and arousal dimensions [@eyben2018method].
+
+In term of category recognition, the accuracy of SensAI to label GEMEP vocal expression of emotion is `r scales::percent(sum(category_accuracy$match_emotion)/nrow(category_accuracy))`. However this low result is partly due to the high number of different affective state labels recognized. In order to bypass the bias of label matching we compared the accuracy to recognize valence and arousal dimensions. The results show an accuracy of `r round(valence_confusion_matrix$overall["Accuracy"],2)` (CI95%[`r round(valence_confusion_matrix$overall["AccuracyLower"],2)`,`r round(valence_confusion_matrix$overall["AccuracyUpper"],2)`]) for valence and `r round(arousal_confusion_matrix$overall["Accuracy"],2)` (CI95%[`r round(arousal_confusion_matrix$overall["AccuracyLower"],2)`,`r round(arousal_confusion_matrix$overall["AccuracyUpper"],2)`]) for arousal recognition.
+
+Automatic emotion recognition from voice is a growing topic of research in Affective Computing. Even if the recognition of emotion categories remains a challenge given the diversity of affective states, the accuracy of a system like SensAI Emotion provides promising results in the recognition of valence and arousal.
 
 References {#references .unnumbered}
 ==========

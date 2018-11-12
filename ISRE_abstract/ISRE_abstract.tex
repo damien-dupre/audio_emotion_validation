@@ -66,10 +66,11 @@
    \ead{damien.dupre@ucd.ie} 
    \cortext[c1]{Corresponding Author}
     \author[Queen's University Belfast]{Gary McKeown}
-   \ead{gmckeown@qub.ac.uk} 
+   \ead{g.mckeown@qub.ac.uk} 
   
-      \address[University College Dublin]{The Insight Centre for Data Analytics, Dublin, Republic of Ireland}
-    \address[Queen's University Belfast]{University Road, Belfast, United Kingdom}
+      \address[University College Dublin]{The Insight Centre for Data Analytics, University College Dublin,
+Republic of Ireland}
+    \address[Queen's University Belfast]{School of Psychology, Queen's University Belfast, United Kingdom}
   
   \begin{abstract}
   
@@ -77,8 +78,56 @@
   
  \end{frontmatter}
 
+Voice is one of the main communication channels to express emotions
+(Poria, Cambria, Bajpai, \& Hussain, 2017). Because Affective Computing
+is aiming to create systems and algorithms to automatically analyse
+people's emotion, several companies such as Affectiva, Beyond Verbal and
+Audeering have already develloped automatic systems to analyse vocal
+expression of emotions. However little is known about the accuracy of
+such systems.
+
+In order to evaluate the accuracy of automatic emotion recognition from
+voice, we have processed vocal expressions from the GEMEP database with
+``SensAI Emotion'' develloped by Audeering. The GEMEP database is made
+of audio-video recordings from 10 actors performing 17 different
+emotional scenarios in which they have to vocalize the same non-words
+with an emotional tonality (Bänziger \& Scherer, 2010). SensAI Emotion
+analyses emotions from speech and render a value for 23 affective states
+as well as for valence and arousal dimensions (Eyben, Scherer, \&
+Schuller, 2018).
+
+In term of category recognition, the accuracy of SensAI to label GEMEP
+vocal expression of emotion is 6.67\%. However this low result is partly
+due to the high number of different affective state labels recognized.
+In order to bypass the bias of label matching we compared the accuracy
+to recognize valence and arousal dimensions. The results show an
+accuracy of 0.56 (CI95\%{[}0.46,0.65{]}) for valence and 0.73
+(CI95\%{[}0.64,0.81{]}) for arousal recognition.
+
+Automatic emotion recognition from voice is a growing topic of research
+in Affective Computing. Even if the recognition of emotion categories
+remains a challenge given the diversity of affective states, the
+accuracy of a system like SensAI Emotion provides promising results in
+the recognition of valence and arousal.
+
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
+
+\hypertarget{refs}{}
+\hypertarget{ref-banziger2010introducing}{}
+Bänziger, T., \& Scherer, K. R. (2010). Introducing the geneva
+multimodal emotion portrayal (gemep) corpus. \emph{Blueprint for
+Affective Computing: A Sourcebook}, 271--294.
+
+\hypertarget{ref-eyben2018method}{}
+Eyben, F., Scherer, K. R., \& Schuller, B. W. (2018). Method for
+automatic affective state inference and an automated affective state
+inference system. Google Patents.
+
+\hypertarget{ref-poria2017review}{}
+Poria, S., Cambria, E., Bajpai, R., \& Hussain, A. (2017). A review of
+affective computing: From unimodal analysis to multimodal fusion.
+\emph{Information Fusion}, \emph{37}, 98--125.
 
 \end{document}
 
