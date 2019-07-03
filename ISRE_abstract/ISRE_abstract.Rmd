@@ -25,30 +25,29 @@ csl: apa.csl
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(cache.extra = knitr::rand_seed, message = FALSE, warning = FALSE, error = FALSE, echo = FALSE, fig.align="center")
+# general options ----------------------------------------------------------------------
+options(scipen = 999) #disable sci number format
+# chunk options ----------------------------------------------------------------
+knitr::opts_chunk$set(
+  cache.extra = knitr::rand_seed, 
+  message = FALSE, 
+  warning = FALSE, 
+  error = FALSE, 
+  echo = FALSE, 
+  fig.align="center"
+  )
+# libraries --------------------------------------------------------------------
 library(papaja)
 library(here)
-# data wrangling
 library(plyr)
 library(data.table)
 library(tidyverse)
-# statistical modeling
-
-# result plots
-library(ggplot2)
-```
-
-
-```{r analysis_preferences}
-set.seed(123)# Seed for random number generation
-options(scipen = 999) #disable sci number format
-
-# load data
-raw_data <- data.table::fread(here::here("./data","audeering_gemep.csv")) 
+# data -------------------------------------------------------------------------
+raw_data <- readr::read_csv("../../data/audio_emotion_data/audeering_gemep.csv") 
 ```
 
 ```{r category-accuracy}
-category_accuracy <- data.table::fread(here::here("./data","audeering_gemep.csv"))%>%
+category_accuracy <- raw_data %>%
   dplyr::filter(emotion %in% c("dis", "con","fea", "irr","anx", "int","joy", "pri","sad", "ang")) %>%
   dplyr::mutate(emotion_c = case_when(
     emotion == "dis" ~ "disgust",
@@ -66,7 +65,7 @@ category_accuracy <- data.table::fread(here::here("./data","audeering_gemep.csv"
 ```
 
 ```{r dimension-accuracy}
-VA_accuracy <- data.table::fread(here::here("./data","audeering_gemep.csv")) %>%
+VA_accuracy <- raw_data %>%
   dplyr::filter(emotion %in% c("joy", "amu","pri", "ang","fea", "des","ple", "rel","int", "irr","anx", "sad")) %>%
   dplyr::select(name_audio, ppt, emotion,contains("emotion")) %>%
   dplyr::mutate(emotion_valence = case_when(
