@@ -1,0 +1,207 @@
+---
+title: "Accuracy of Automatic Emotion Recognition from Voice"
+subtitle: "International Society for Research on Emotion "
+author: "Damien Dupré"
+date: "Amsterdam, July 10th 2019"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include = FALSE}
+# general options ----------------------------------------------------------------------
+options(scipen = 999) #disable sci number format
+# chunk options ----------------------------------------------------------------
+knitr::opts_chunk$set(
+  cache.extra = knitr::rand_seed, 
+  message = FALSE, 
+  warning = FALSE, 
+  error = FALSE, 
+  echo = FALSE, 
+  fig.align="center"
+  )
+# libraries --------------------------------------------------------------------
+library(papaja)
+library(here)
+library(plyr)
+library(data.table)
+library(tidyverse)
+# data -------------------------------------------------------------------------
+raw_data <- readr::read_csv("../../data/audio_emotion_data/audeering_gemep.csv") 
+```
+
+
+# Automatic Emotion Recognition
+
+Since the 70's, automatic systems has been develloped to recognize individual emotions.
+
+With the advancement of Machine Learning technics, multiple companies are now providing solution for automatic emotion recognition for diverse applications such as marketing, automotive, activity and helth care monitoring.
+
+Automatic emotion recognition systems can use:
+ - physiological sensors and brain activity measurements
+ - textual expression for sentiment analysis
+ - visual capture of facial expressions and postures
+ - audio capture of vocal expressions
+
+---
+
+# Vocal Expressions of Emotions
+
+Voice is one of the most important channel to communicate emotions not only thought the word used but also thought the tonality used to pronounce these words.
+
+Several companies are providing emotion recognition systems from voice:
+
+* AudEERING
+* Affectiva
+* Neurodata Labs
+* Beyond Verbal
+* Amazone Web Service
+* Microsoft Azure
+* Google Cloud
+* ...
+
+---
+class: inverse, center, middle
+
+# Method
+
+---
+
+# Vocal Expression of Emotions
+
+In order to evaluate the accuracy to recognise emotion from voice tonality we have extracted the audio track from the videos of the GEMEP-CS database (Bänziger & Scherer, 2010; Bänziger, Mortillaro & Scherer, 2012).
+
+The Geneva Multimodal Emotion Portrayals Core Set (GEMEP-CS) database is made of video recording of:
+- 10 professional Frenchspeaking theater actors (5 females and 5 males, Mage = 37.1)
+- they had to enact up to 15 emotion categories (facial expression, posture and voice)
+- for each enactement they had to pronounce a pseudosentence that sounds like an unknown real language, consisting of meaningless words constituted by phonemes from several languages
+
+Why GEMEP?
+* language words and sentences can be emotionally tainted
+* the way words are pronounce can biased by their emotional meaning
+* pseudosentence aims to remove this potential bias
+
+---
+
+# Emotion Categories
+
+|Key|Emotion                |Valence|Arousal|
+|---|-----------------------|-------|-------|
+|Amu|Amusement              |+      |+      |
+|Pri|Pride                  |+      |+      |
+|Joy|Elated Joy             |+      |+      |
+|Rel|Relief                 |+      |-      |
+|Int|Interest               |+      |-      |
+|Ple|Pleasure               |+      |-      |
+|Ang|Hot anger (rage)       |-      |+      |
+|Fea|(Panic) Fear           |-      |+      |
+|Des|Despair                |-      |+      |
+|Irr|Irritation (cold anger)|-      |-      |
+|Anx|Anxiety                |-      |-      |
+|Sad|Sadness                |-      |-      |
+|Adm|Admiration             |AE     |AE     |
+|Amu|Amusement              |AE     |AE     |
+|Ten|Tenderness             |AE     |AE     |
+|Dis|Disgust                |AE     |AE     |
+|Con|Contempt               |AE     |AE     |
+|Sur|Surprise               |AE     |AE     |
+
+*AE = Additional Emotion
+
+---
+
+# AudEERING Emotion Recognition from Voice
+
+AudEERING is a German company founded in 2012 by Dagmar and Björn Schuller.
+
+They provide openSMILE, an open-source system to perform audio feature spaces in real time as well as Emotion Recognition
+https://github.com/naxingyu/opensmile
+
+They also have developped SensAI, an API solution to analyse emotions from voice features (Eyben, Huber, Marchi, Schuller, & Schuller, 2015).
+
+More precisely SensAI can recognize:
+1. Overall emotion
+2. Probability of expressing emotion categories: passion, panic, nervousness, disgust, contentment, affection, fear, irritation, satisfaction, frustration, enthusiasm, worry, boredom, interest, tension, joy, depression, stress, pride, excitement, sadness, anger, relaxation, happiness
+3. Probability of expressing emotion dimensions: valence, activation, dominance
+
+---
+class: inverse, center, middle
+
+# Results
+
+---
+
+# Matching Categorical Emotion Expressed with Overall Emotion Recognized
+
+Among the 24 emotions recognized by SensAI and the 15 expressed in the GEMEP only 10 are matching: disgust, contentment, fear, irritation, worry, interest, joy, pride, sadness, anger.
+
+```{r category-accuracy}
+category_accuracy <- raw_data %>%
+  dplyr::filter(emotion %in% c("dis", "con","fea", "irr","anx", "int","joy", "pri","sad", "ang")) %>%
+  dplyr::mutate(emotion_c = case_when(
+    emotion == "dis" ~ "disgust",
+    emotion == "con" ~ "contentment",
+    emotion == "fea" ~ "fear",
+    emotion == "irr" ~ "irritation",
+    emotion == "anx" ~ "worry",
+    emotion == "int" ~ "interest",
+    emotion == "joy" ~ "joy",
+    emotion == "pri" ~ "pride",
+    emotion == "sad" ~ "sadness",
+    emotion == "ang" ~ "anger"
+  )) %>%
+  dplyr::mutate(match_emotion = ifelse(emotion_c == segments.emotion.category.name, 1, 0))
+```
+
+The average proportion of correct overall recognition by SensAI among these emotions is `r scales::percent(sum(category_accuracy$match_emotion)/nrow(category_accuracy))`
+
+```{r, fig.width=12, fig.height=4}
+category_accuracy %>% 
+  dplyr::group_by(emotion_c) %>% 
+  dplyr::summarise(
+    n_emo = n(),
+    avg_emo = mean(match_emotion)
+    ) %>% 
+  dplyr::arrange(desc(avg_emo)) %>% 
+  dplyr::mutate(emotion_c = forcats::fct_inorder(emotion_c)) %>% 
+  ggplot(aes(emotion_c, avg_emo)) +
+  geom_bar(stat="identity") +
+  scale_x_discrete(
+    name = "Emotion Expressed"
+    ) +
+  scale_y_continuous(
+    name = "Proportion of emotion matching",
+    labels = scales::percent_format(accuracy = 1),
+    limits = c(0,1)
+    ) +
+  theme_minimal() +
+  theme(text = element_text(size = 20)) +
+  coord_flip()
+
+```
+
+---
+
+Matching Categorical Emotion Expressed with Emotion Recognized Probablility
+
+```{r}
+test <- raw_data %>% 
+  dplyr::select(ppt, emotion, segment_audio, contains("segments.emotion.category_scores")) %>% 
+  dplyr::rename_at(vars(contains("segments.emotion.category_scores")), ~ str_replace(., "segments.emotion.category_scores.", ""))
+```
+
+---
+
+class: inverse, center, middle
+
+# Thanks for your attention!
+
+Damien Dupré
+
+Dublin City University
+
+damien.dupre@dcu.ie
