@@ -1,10 +1,11 @@
 ---
 title: "Accuracy of Automatic Emotion Recognition from Voice"
 subtitle: "International Society for Research on Emotion "
-author: "Damien Dupré"
+author: "Damien Dupré & Gary McKeown"
 date: "Amsterdam, July 10th 2019"
 output:
   xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts]
     lib_dir: libs
     nature:
       highlightStyle: github
@@ -46,9 +47,9 @@ common_labels <-
 
 # Automatic Emotion Recognition
 
-Since the 70's, automatic systems has been develloped to recognize individual emotions.
+Since the 1970's, automatic systems has been developed to recognize individual emotions.
 
-With the advancement of Machine Learning technics, multiple companies are now providing solution for automatic emotion recognition for diverse applications such as marketing, automotive, activity and helth care monitoring.
+With the advancement of Machine Learning techniques, multiple companies are now providing solution for automatic emotion recognition for diverse applications such as marketing, automotive, activity and health care monitoring.
 
 Automatic emotion recognition systems can use:
  - physiological sensors and brain activity measurements
@@ -58,19 +59,20 @@ Automatic emotion recognition systems can use:
 
 ---
 
-# Vocal Expressions of Emotions
+# Automatic Voice Recognition Systems
 
 Voice is one of the most important channel to communicate emotions not only thought the word used but also thought the tonality used to pronounce these words.
+
+* First academic paper presenting an automatic system in 1996 (Dellaert, Polzin & Waibel, 1996)
+* To date, 18 public repositories on GitHub https://github.com/topics/speech-emotion-recognition
 
 Several companies are providing emotion recognition systems from voice:
 
 * AudEERING
 * Affectiva
 * Neurodata Labs
-* Beyond Verbal
-* Amazone Web Service
-* Microsoft Azure
-* Google Cloud
+* Amazon Alexa (in development)
+* Cogito
 * ...
 
 ---
@@ -80,19 +82,53 @@ class: inverse, center, middle
 
 ---
 
-# Vocal Expression of Emotions
+# Database
 
 In order to evaluate the accuracy to recognise emotion from voice tonality we have extracted the audio track from the videos of the GEMEP-CS database (Bänziger & Scherer, 2010; Bänziger, Mortillaro & Scherer, 2012).
 
 The Geneva Multimodal Emotion Portrayals Core Set (GEMEP-CS) database is made of video recording of:
-- 10 professional Frenchspeaking theater actors (5 females and 5 males, Mage = 37.1)
+- 10 professional French speaking theater actors (5 females and 5 males, *M*<sub>age</sub> = 37.1)
 - they had to enact up to 18 emotion categories (facial expression, posture and voice)
-- for each enactement they had to pronounce a pseudosentence that sounds like an unknown real language, consisting of meaningless words constituted by phonemes from several languages
+- for each enactment they had to pronounce a pseudosentence that sounds like an unknown real language, consisting of meaningless words constituted by phonemes from several languages
 
-Why GEMEP?
+```{r out.width = "30%"}
+knitr::include_graphics("https://www.researchgate.net/profile/Marc_Mehu/publication/228071481/figure/fig1/AS:302181455548416@1449057081082/Example-of-the-GEMEP-FERA-data-set-One-of-the-actors-displaying-an-expression-associated.png") 
+```
+
+---
+
+# Why GEMEP?
+
 * language words and sentences can be emotionally tainted
+
 * the way words are pronounce can biased by their emotional meaning
+
 * pseudosentence aims to remove this potential bias
+
+--
+
+## Let's try to recognize some of the emotions expressed
+
+--
+
+<html>
+<audio controls>
+  <source src="./sample/01amu_Gemep.mp3" type="audio/mpeg"/>
+</audio></html>
+
+--
+
+**Amusement!**
+
+--
+
+<audio controls>
+  <source src="./sample/01ang_Gemep.mp3" type="audio/mpeg"/>
+</audio>
+
+--
+
+**Anger!**
 
 ---
 
@@ -121,12 +157,12 @@ tibble::tribble(
   "Sur", "Surprise", "Additional Emotion", "Additional Emotion"
   ) %>%
   knitr::kable(format='html') %>%
-  kableExtra::kable_styling(font_size = 13)
+  kableExtra::kable_styling(font_size = 12)
 ```
 
 ---
 
-# AudEERING Emotion Recognition from Voice
+# System
 
 AudEERING is a German company founded in 2012 by Dagmar and Björn Schuller.
 
@@ -139,7 +175,7 @@ Emotions are recognized thank to a Long short-term memory (LSTM) recurrent neura
 
 ---
 
-# AudEERING Emotion Recognition from Voice
+# System
 
 More precisely SensAI can recognize:
 1. Overall emotion
@@ -155,7 +191,7 @@ class: inverse, center, middle
 
 ---
 
-# Matching Categorical Emotion Expressed with Overall Emotion Recognized
+# Matching Overall Emotion Recognized
 
 ```{r category-accuracy}
 category_accuracy <- raw_data %>%
@@ -202,7 +238,7 @@ category_accuracy %>%
 
 ---
 
-# Matching Categorical Emotion Expressed with Highest Emotion Label Recognized
+# Matching the Highest Emotion Label
 
 ```{r label-accuracy}
 label_accuracy <- raw_data %>% 
@@ -286,7 +322,7 @@ label_selected_accuracy %>%
 
 ---
 
-# Matching Dimensional Emotion Expressed with Valence Recognized
+# Matching Dimensional Emotion: Valence 
 
 ```{r dimension-accuracy}
 dimension_accuracy <- raw_data %>% 
@@ -364,7 +400,7 @@ dimension_accuracy %>%
 
 ---
 
-# Matching Dimensional Emotion Expressed with Arousal Recognized
+#Matching Dimensional Emotion: Arousal 
 
 The average proportion of correct arousal matching recognition by SensAI among these emotions is `r scales::percent(arousal_confusion_matrix$overall["Accuracy"])` (CI95%[`r scales::percent(arousal_confusion_matrix$overall["AccuracyLower"])`,`r scales::percent(arousal_confusion_matrix$overall["AccuracyUpper"])`], *p* = `r round(arousal_confusion_matrix$overall["AccuracyPValue"], 4)`).
 
@@ -396,12 +432,20 @@ dimension_accuracy %>%
 
 # Discussion
 
-* The categorical recognition of emotion remains a challenge due to the diversity of affective states
+* The categorical recognition of emotion remains a challenge:
+  * diversity of affective states
+  * heterogeneity of categories inside a language and between languages
+  * overlap of categories
+
 * However, the accuracy of a system like SensAI Emotion provides promising results in the recognition of valence and arousal
+
 * The results of this automatic recognition system needs to be compared with other systems in order to evaluate their relative accuracy
+
 * Different databases need to be investigated as well:
   * Sentences *vs.* Pseudosentences
   * Posed vocal expressions *vs.* Spontaneous vocal expressions
+  
+* Vocal expression of emotions or social message?
 
 ---
 
@@ -409,8 +453,20 @@ class: inverse, center, middle
 
 # Thanks for your attention!
 
+*Accuracy of Automatic Emotion Recognition from Voice*
+
+.pull-left[
 Damien Dupré
 
 Dublin City University
 
 damien.dupre@dcu.ie
+]
+
+.pull-right[
+Gary McKeown
+
+Queen's University Belfast
+
+g.mckeown@qub.ac.uk
+]

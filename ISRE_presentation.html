@@ -3,9 +3,10 @@
   <head>
     <title>Accuracy of Automatic Emotion Recognition from Voice</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Damien Dupré" />
+    <meta name="author" content="Damien Dupré &amp; Gary McKeown" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
   </head>
   <body>
@@ -14,7 +15,7 @@ class: center, middle, inverse, title-slide
 
 # Accuracy of Automatic Emotion Recognition from Voice
 ## International Society for Research on Emotion
-### Damien Dupré
+### Damien Dupré &amp; Gary McKeown
 ### Amsterdam, July 10th 2019
 
 ---
@@ -24,9 +25,9 @@ class: center, middle, inverse, title-slide
 
 # Automatic Emotion Recognition
 
-Since the 70's, automatic systems has been develloped to recognize individual emotions.
+Since the 1970's, automatic systems has been developed to recognize individual emotions.
 
-With the advancement of Machine Learning technics, multiple companies are now providing solution for automatic emotion recognition for diverse applications such as marketing, automotive, activity and helth care monitoring.
+With the advancement of Machine Learning techniques, multiple companies are now providing solution for automatic emotion recognition for diverse applications such as marketing, automotive, activity and health care monitoring.
 
 Automatic emotion recognition systems can use:
  - physiological sensors and brain activity measurements
@@ -36,19 +37,20 @@ Automatic emotion recognition systems can use:
 
 ---
 
-# Vocal Expressions of Emotions
+# Automatic Voice Recognition Systems
 
 Voice is one of the most important channel to communicate emotions not only thought the word used but also thought the tonality used to pronounce these words.
+
+* First academic paper presenting an automatic system in 1996 (Dellaert, Polzin &amp; Waibel, 1996)
+* To date, 18 public repositories on GitHub https://github.com/topics/speech-emotion-recognition
 
 Several companies are providing emotion recognition systems from voice:
 
 * AudEERING
 * Affectiva
 * Neurodata Labs
-* Beyond Verbal
-* Amazone Web Service
-* Microsoft Azure
-* Google Cloud
+* Amazon Alexa (in development)
+* Cogito
 * ...
 
 ---
@@ -58,25 +60,57 @@ class: inverse, center, middle
 
 ---
 
-# Vocal Expression of Emotions
+# Database
 
 In order to evaluate the accuracy to recognise emotion from voice tonality we have extracted the audio track from the videos of the GEMEP-CS database (Bänziger &amp; Scherer, 2010; Bänziger, Mortillaro &amp; Scherer, 2012).
 
 The Geneva Multimodal Emotion Portrayals Core Set (GEMEP-CS) database is made of video recording of:
-- 10 professional Frenchspeaking theater actors (5 females and 5 males, Mage = 37.1)
-- they had to enact up to 15 emotion categories (facial expression, posture and voice)
-- for each enactement they had to pronounce a pseudosentence that sounds like an unknown real language, consisting of meaningless words constituted by phonemes from several languages
+- 10 professional French speaking theater actors (5 females and 5 males, *M*&lt;sub&gt;age&lt;/sub&gt; = 37.1)
+- they had to enact up to 18 emotion categories (facial expression, posture and voice)
+- for each enactment they had to pronounce a pseudosentence that sounds like an unknown real language, consisting of meaningless words constituted by phonemes from several languages
 
-Why GEMEP?
+&lt;img src="https://www.researchgate.net/profile/Marc_Mehu/publication/228071481/figure/fig1/AS:302181455548416@1449057081082/Example-of-the-GEMEP-FERA-data-set-One-of-the-actors-displaying-an-expression-associated.png" width="30%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Why GEMEP?
+
 * language words and sentences can be emotionally tainted
+
 * the way words are pronounce can biased by their emotional meaning
+
 * pseudosentence aims to remove this potential bias
+
+--
+
+## Let's try to recognize some of the emotions expressed
+
+--
+
+&lt;html&gt;
+&lt;audio controls&gt;
+  &lt;source src="./sample/01amu_Gemep.mp3" type="audio/mpeg"/&gt;
+&lt;/audio&gt;&lt;/html&gt;
+
+--
+
+**Amusement!**
+
+--
+
+&lt;audio controls&gt;
+  &lt;source src="./sample/01ang_Gemep.mp3" type="audio/mpeg"/&gt;
+&lt;/audio&gt;
+
+--
+
+**Anger!**
 
 ---
 
 # Emotion Categories
 
-&lt;table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;"&gt;
+&lt;table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt; Key &lt;/th&gt;
@@ -199,7 +233,7 @@ Why GEMEP?
 
 ---
 
-# AudEERING Emotion Recognition from Voice
+# System
 
 AudEERING is a German company founded in 2012 by Dagmar and Björn Schuller.
 
@@ -212,7 +246,7 @@ Emotions are recognized thank to a Long short-term memory (LSTM) recurrent neura
 
 ---
 
-# AudEERING Emotion Recognition from Voice
+# System
 
 More precisely SensAI can recognize:
 1. Overall emotion
@@ -228,17 +262,17 @@ class: inverse, center, middle
 
 ---
 
-# Matching Categorical Emotion Expressed with Overall Emotion Recognized
+# Matching Overall Emotion Recognized
 
 
 
 The average proportion of correct overall recognition by SensAI among these emotions is 7.45%
 
-&lt;img src="ISRE_presentation_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="ISRE_presentation_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# Matching Categorical Emotion Expressed with Highest Emotion Label Recognized
+# Matching the Highest Emotion Label
 
 
 
@@ -248,36 +282,44 @@ The average proportion of correct highest label matching recognition by SensAI a
 
 The average proportion of correct highest selected label matching recognition by SensAI among these emotions is 18.2% (CI95%[11.5%,26.7%], *p* = 0.9944).
 
-&lt;img src="ISRE_presentation_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="ISRE_presentation_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# Matching Dimensional Emotion Expressed with Valence Recognized
+# Matching Dimensional Emotion: Valence 
 
 
 
 The average proportion of correct valence matching recognition by SensAI among these emotions is 57.3% (CI95%[48.8%,65.6%], *p* = 0.9495).
 
-&lt;img src="ISRE_presentation_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="ISRE_presentation_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# Matching Dimensional Emotion Expressed with Arousal Recognized
+#Matching Dimensional Emotion: Arousal 
 
 The average proportion of correct arousal matching recognition by SensAI among these emotions is 74.8% (CI95%[66.9%,81.7%], *p* = 0.0288).
 
-&lt;img src="ISRE_presentation_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="ISRE_presentation_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 # Discussion
 
-* The categorical recognition of emotion remains a challenge due to the diversity of affective states
+* The categorical recognition of emotion remains a challenge:
+  * diversity of affective states
+  * heterogeneity of categories inside a language and between languages
+  * overlap of categories
+
 * However, the accuracy of a system like SensAI Emotion provides promising results in the recognition of valence and arousal
+
 * The results of this automatic recognition system needs to be compared with other systems in order to evaluate their relative accuracy
+
 * Different databases need to be investigated as well:
   * Sentences *vs.* Pseudosentences
   * Posed vocal expressions *vs.* Spontaneous vocal expressions
+  
+* Vocal expression of emotions or social message?
 
 ---
 
@@ -285,11 +327,23 @@ class: inverse, center, middle
 
 # Thanks for your attention!
 
+*Accuracy of Automatic Emotion Recognition from Voice*
+
+.pull-left[
 Damien Dupré
 
 Dublin City University
 
 damien.dupre@dcu.ie
+]
+
+.pull-right[
+Gary McKeown
+
+Queen's University Belfast
+
+g.mckeown@qub.ac.uk
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
