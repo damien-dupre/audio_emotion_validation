@@ -400,7 +400,7 @@ arousal_confusion_matrix <- caret::confusionMatrix(dimension_accuracy$emotion_ar
 
 The average proportion of correct valence matching recognition by SensAI among these emotions is `r scales::percent(valence_confusion_matrix$overall["Accuracy"])` (CI95%[`r scales::percent(valence_confusion_matrix$overall["AccuracyLower"])`,`r scales::percent(valence_confusion_matrix$overall["AccuracyUpper"])`], *p* = `r round(valence_confusion_matrix$overall["AccuracyPValue"], 4)`).
 
-```{r, fig.width=12, fig.height=4}
+```{r, fig.width=12, fig.height=6}
 dimension_accuracy %>% 
   dplyr::group_by(emotion) %>% 
   dplyr::summarise(
@@ -450,7 +450,7 @@ dimension_accuracy %>%
 
 The average proportion of correct arousal matching recognition by SensAI among these emotions is `r scales::percent(arousal_confusion_matrix$overall["Accuracy"])` (CI95%[`r scales::percent(arousal_confusion_matrix$overall["AccuracyLower"])`,`r scales::percent(arousal_confusion_matrix$overall["AccuracyUpper"])`], *p* = `r round(arousal_confusion_matrix$overall["AccuracyPValue"], 4)`).
 
-```{r, fig.width=12, fig.height=4}
+```{r, fig.width=12, fig.height=6}
 dimension_accuracy %>% 
   dplyr::group_by(emotion) %>% 
   dplyr::summarise(
