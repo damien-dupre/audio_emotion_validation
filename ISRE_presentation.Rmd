@@ -409,12 +409,15 @@ dimension_accuracy %>%
     avg_valence = mean(match_valence)
   )  %>% 
   dplyr::mutate(freq_valence = paste0(n_match, "/", n_valence)) %>%
-  dplyr::arrange(desc(avg_valence)) %>% 
+  dplyr::arrange(desc(avg_valence)) %>%
+  dplyr::mutate(emotion_valence = case_when(
+    emotion %in% c("joy","amusement","pride","pleasure","relief","interest") ~ "positive",
+    emotion %in% c("anger","fear","despair","irritation","anxiety","sadness") ~ "negative"
+  )) %>% 
   dplyr::mutate(emotion = forcats::fct_inorder(emotion)) %>% 
-  ggplot(aes(emotion, avg_valence)) +
+  ggplot(aes(emotion, avg_valence, fill = emotion_valence)) +
   geom_bar(
-    stat = "identity", 
-    fill = "darkblue"
+    stat = "identity"
   ) +
   geom_hline(
     aes(yintercept = sum(dimension_accuracy$match_valence)/nrow(dimension_accuracy)), 
@@ -432,8 +435,12 @@ dimension_accuracy %>%
     labels = scales::percent_format(accuracy = 1),
     limits = c(0,1)
   ) +
+  scale_fill_manual("Valence", values = c("blue", "red")) +
   theme_minimal() +
-  theme(text = element_text(size = 20)) +
+  theme(
+    text = element_text(size = 20),
+    legend.position = "bottom"
+      ) +
   coord_flip()
 ```
 
@@ -453,17 +460,20 @@ dimension_accuracy %>%
   )  %>% 
   dplyr::mutate(freq_arousal = paste0(n_match, "/", n_arousal)) %>%
   dplyr::arrange(desc(avg_arousal)) %>% 
+  dplyr::mutate(emotion_arousal = case_when(
+    emotion %in% c("joy", "amusement","pride", "anger","fear", "despair") ~ "high",
+    emotion %in% c("pleasure", "relief","interest", "irritation","anxiety", "sadness") ~ "low"
+  )) %>%
   dplyr::mutate(emotion = forcats::fct_inorder(emotion)) %>% 
-  ggplot(aes(emotion, avg_arousal)) +
+  ggplot(aes(emotion, avg_arousal, fill = emotion_arousal)) +
   geom_bar(
-    stat = "identity", 
-    fill = "darkblue"
+    stat = "identity"
   ) +
   geom_hline(
     aes(yintercept = sum(dimension_accuracy$match_arousal)/nrow(dimension_accuracy)), 
     linetype = "dashed"
   ) +
-    geom_text(
+  geom_text(
     aes(y = 0.95, label = freq_arousal), 
     size = 3
   ) +
@@ -475,8 +485,12 @@ dimension_accuracy %>%
     labels = scales::percent_format(accuracy = 1),
     limits = c(0,1)
   ) +
+  scale_fill_manual("Arousal", values = c("red", "blue")) +
   theme_minimal() +
-  theme(text = element_text(size = 20)) +
+  theme(
+    text = element_text(size = 20),
+    legend.position = "bottom"
+  ) +
   coord_flip()
 ```
 
