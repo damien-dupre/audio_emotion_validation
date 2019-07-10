@@ -2,7 +2,7 @@
 title: "Accuracy of Automatic Emotion Recognition from Voice"
 subtitle: "International Society for Research on Emotion "
 author: "Damien Dupré & Gary McKeown"
-date: "Amsterdam, July 10th 2019"
+date: "Amsterdam, July 11th 2019"
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts]
