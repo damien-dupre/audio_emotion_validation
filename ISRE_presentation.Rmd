@@ -217,20 +217,33 @@ category_accuracy %>%
   dplyr::group_by(emotion_c) %>% 
   dplyr::summarise(
     n_emo = n(),
+    n_match = sum(match_emotion),
     avg_emo = mean(match_emotion)
-    ) %>% 
+  )  %>% 
+  dplyr::mutate(freq_emo = paste0(n_match, "/", n_emo)) %>% 
   dplyr::arrange(desc(avg_emo)) %>% 
   dplyr::mutate(emotion_c = forcats::fct_inorder(emotion_c)) %>% 
   ggplot(aes(emotion_c, avg_emo)) +
-  geom_bar(stat="identity") +
+  geom_bar(
+    stat = "identity", 
+    fill = "darkblue"
+  ) +
+  geom_hline(
+    aes(yintercept = sum(category_accuracy$match_emotion)/nrow(category_accuracy)), 
+    linetype = "dashed"
+  ) +
+  geom_text(
+    aes(y = 0.95, label = freq_emo), 
+    size = 3
+  ) +
   scale_x_discrete(
     name = "Emotion Expressed"
-    ) +
+  ) +
   scale_y_continuous(
     name = "Proportion of emotion matching",
     labels = scales::percent_format(accuracy = 1),
     limits = c(0,1)
-    ) +
+  ) +
   theme_minimal() +
   theme(text = element_text(size = 20)) +
   coord_flip()
@@ -301,20 +314,33 @@ label_selected_accuracy %>%
   dplyr::group_by(emotion_c) %>% 
   dplyr::summarise(
     n_emo = n(),
+    n_match = sum(match_emotion),
     avg_emo = mean(match_emotion)
-    ) %>% 
+  )  %>% 
+  dplyr::mutate(freq_emo = paste0(n_match, "/", n_emo)) %>% 
   dplyr::arrange(desc(avg_emo)) %>% 
   dplyr::mutate(emotion_c = forcats::fct_inorder(emotion_c)) %>% 
   ggplot(aes(emotion_c, avg_emo)) +
-  geom_bar(stat="identity") +
+  geom_bar(
+    stat = "identity", 
+    fill = "darkblue"
+  ) +
+  geom_hline(
+    aes(yintercept = sum(label_selected_accuracy$match_emotion)/nrow(label_selected_accuracy)), 
+    linetype = "dashed"
+  ) +
+  geom_text(
+    aes(y = 0.95, label = freq_emo), 
+    size = 3
+  ) +
   scale_x_discrete(
     name = "Emotion Expressed"
-    ) +
+  ) +
   scale_y_continuous(
     name = "Proportion of highest emotion label matching",
     labels = scales::percent_format(accuracy = 1),
     limits = c(0,1)
-    ) +
+  ) +
   theme_minimal() +
   theme(text = element_text(size = 20)) +
   coord_flip()
@@ -378,13 +404,26 @@ The average proportion of correct valence matching recognition by SensAI among t
 dimension_accuracy %>% 
   dplyr::group_by(emotion) %>% 
   dplyr::summarise(
-    n_emo = n(),
+    n_valence = n(),
+    n_match = sum(match_valence),
     avg_valence = mean(match_valence)
-  ) %>% 
+  )  %>% 
+  dplyr::mutate(freq_valence = paste0(n_match, "/", n_valence)) %>%
   dplyr::arrange(desc(avg_valence)) %>% 
   dplyr::mutate(emotion = forcats::fct_inorder(emotion)) %>% 
   ggplot(aes(emotion, avg_valence)) +
-  geom_bar(stat="identity") +
+  geom_bar(
+    stat = "identity", 
+    fill = "darkblue"
+  ) +
+  geom_hline(
+    aes(yintercept = sum(dimension_accuracy$match_valence)/nrow(dimension_accuracy)), 
+    linetype = "dashed"
+  ) +
+  geom_text(
+    aes(y = 0.95, label = freq_valence), 
+    size = 3
+  ) +
   scale_x_discrete(
     name = "Emotion Expressed"
   ) +
@@ -408,13 +447,26 @@ The average proportion of correct arousal matching recognition by SensAI among t
 dimension_accuracy %>% 
   dplyr::group_by(emotion) %>% 
   dplyr::summarise(
-    n_emo = n(),
+    n_arousal = n(),
+    n_match = sum(match_arousal),
     avg_arousal = mean(match_arousal)
-  ) %>% 
+  )  %>% 
+  dplyr::mutate(freq_arousal = paste0(n_match, "/", n_arousal)) %>%
   dplyr::arrange(desc(avg_arousal)) %>% 
   dplyr::mutate(emotion = forcats::fct_inorder(emotion)) %>% 
   ggplot(aes(emotion, avg_arousal)) +
-  geom_bar(stat="identity") +
+  geom_bar(
+    stat = "identity", 
+    fill = "darkblue"
+  ) +
+  geom_hline(
+    aes(yintercept = sum(dimension_accuracy$match_arousal)/nrow(dimension_accuracy)), 
+    linetype = "dashed"
+  ) +
+    geom_text(
+    aes(y = 0.95, label = freq_arousal), 
+    size = 3
+  ) +
   scale_x_discrete(
     name = "Emotion Expressed"
   ) +
