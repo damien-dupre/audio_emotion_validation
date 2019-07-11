@@ -105,31 +105,6 @@ knitr::include_graphics("https://www.researchgate.net/profile/Marc_Mehu/publicat
 
 * pseudosentence aims to remove this potential bias
 
---
-
-## Let's try to recognize some of the emotions expressed
-
---
-
-<html>
-<audio controls>
-  <source src="./sample/01amu_Gemep.mp3" type="audio/mpeg"/>
-</audio></html>
-
---
-
-**Amusement!**
-
---
-
-<audio controls>
-  <source src="./sample/01ang_Gemep.mp3" type="audio/mpeg"/>
-</audio>
-
---
-
-**Anger!**
-
 ---
 
 # Emotion Categories
@@ -162,16 +137,60 @@ tibble::tribble(
 
 ---
 
+# Let's Play a Game!
+
+
+<html>
+<audio controls>
+  <source src="./sample/01amu_Gemep.mp3" type="audio/mpeg"/>
+</audio></html>
+
+--
+
+**Amusement!**
+
+--
+
+<audio controls>
+  <source src="./sample/01ang_Gemep.mp3" type="audio/mpeg"/>
+</audio>
+
+--
+
+**Anger!**
+
+--
+
+<audio controls>
+  <source src="./sample/01anx_Gemep.mp3" type="audio/mpeg"/>
+</audio>
+
+--
+
+**Anxiety!**
+
+--
+
+<audio controls>
+  <source src="./sample/01con_Gemep.mp3" type="audio/mpeg"/>
+</audio>
+
+--
+
+**Contempt!**
+
+---
+
 # System
 
-AudEERING is a German company founded in 2012 by Dagmar and Björn Schuller.
+AudEERING is a German company founded in 2012.
 
 They provide openSMILE, an open-source system to perform audio feature spaces in real time as well as Emotion Recognition
 https://github.com/naxingyu/opensmile
 
 They also have developped SensAI, an API solution to analyse emotions from voice features (Eyben, Huber, Marchi, Schuller, & Schuller, 2015).
 
-Emotions are recognized thank to a Long short-term memory (LSTM) recurrent neural network (RNN) based on 988 acoustic features.
+Emotions are recognized thank to a Long short-term memory (LSTM) recurrent neural network (RNN) based on sometimes more than 1000 acoustic features.
 
 ---
 
