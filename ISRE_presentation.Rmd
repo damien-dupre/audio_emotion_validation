@@ -1,6 +1,6 @@
 ---
 title: "Accuracy of Automatic Emotion Recognition from Voice"
-subtitle: "International Society for Research on Emotion "
+subtitle: "International Society for Research on Emotion"
 author: "Damien Dupré & Gary McKeown"
 date: "Amsterdam, July 11th 2019"
 output:
